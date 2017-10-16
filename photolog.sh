@@ -38,7 +38,7 @@ for file in $SRC_VIDEOS/IMG*.mov; do;
         box=1: boxcolor=black@0.4: boxborderw=8:\
         text='$dateString':\
         x=$PADDING:\
-        y=(h - $PADDING - max_glyph_h),\
+        y=(h - $PADDING - max_glyph_h - ascent),\
       drawtext=\
         fontfile=/Library/Fonts/PTMono.ttc:\
         fontcolor=white: alpha=0.7:\
