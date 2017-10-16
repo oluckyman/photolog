@@ -10,6 +10,9 @@ PADDING=16
 FONT_SCALE=1.44
 DATESTRING_W=300
 
+echo Cleaning contents of the output dir: $OUTPUT/*
+rm -rd $OUTPUT/*
+
 hasVideos=0
 for file in $SRC_VIDEOS/IMG*.mov; do;
   creationdate=$(ffprobe $file -show_entries format_tags=com.apple.quicktime.creationdate -v quiet -print_format compact=nokey=1:p=0)
@@ -53,5 +56,7 @@ for file in $SRC_VIDEOS/IMG*.mov; do;
   fi;
 done;
 if [ $hasVideos = 1 ]; then
+  echo "Concating all the videos"
+  ffmpeg -f concat -safe 0 -i <(for f in $OUTPUT/*.mov; do echo "file '$PWD/$f'"; done) -c copy $OUTPUT/photolog.mov -loglevel error
   echo "Complete. Photolog is saved to: $OUTPUT/"
 fi
