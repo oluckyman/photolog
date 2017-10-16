@@ -1,8 +1,8 @@
 #!/bin/zsh
 # Process photolog videos
 
-# SRC_VIDEOS=videos
-SRC_VIDEOS=test
+SRC_VIDEOS=videos
+# SRC_VIDEOS=test
 OUTPUT=output
 MONTH=09
 FONT_SIZE=32
@@ -38,7 +38,7 @@ for file in $SRC_VIDEOS/IMG*.mov; do;
         box=1: boxcolor=black@0.4: boxborderw=8:\
         text='$dateString':\
         x=$PADDING:\
-        y=(h - $PADDING - max_glyph_h - ascent),\
+        y=(h - $PADDING - ascent),\
       drawtext=\
         fontfile=/Library/Fonts/PTMono.ttc:\
         fontcolor=white: alpha=0.7:\
@@ -46,7 +46,7 @@ for file in $SRC_VIDEOS/IMG*.mov; do;
         box=1: boxcolor=black@0.4: boxborderw=8:\
         text='${timeString[0,2]}\:${timeString[4,5]}':\
         x=($PADDING + $DATESTRING_W + $PADDING + $(( $minutesFromNine / $delta )) * ($PADDING + text_w)):\
-        y=(h - $PADDING - max_glyph_h)"\
+        y=(h - $PADDING - ascent)"\
       $OUTPUT/$videoFileName
     echo ' Done.'
     hasVideos=1
