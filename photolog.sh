@@ -1,10 +1,16 @@
 #!/bin/zsh
 # Process photolog videos
 
-SRC_VIDEOS=videos
-# SRC_VIDEOS=test
+# SRC_VIDEOS=videos
+SRC_VIDEOS=test
 OUTPUT=output
 MONTH=09
+FONT_SIZE=32
+PADDING=16
+FONT_SCALE=1.44
+DATESTRING_W=300
+
+hasVideos=0
 for file in $SRC_VIDEOS/IMG*.mov; do;
   creationdate=$(ffprobe $file -show_entries format_tags=com.apple.quicktime.creationdate -v quiet -print_format compact=nokey=1:p=0)
   videoFileName=$(basename "$file")
@@ -28,18 +34,24 @@ for file in $SRC_VIDEOS/IMG*.mov; do;
       -vf "drawtext=\
         fontfile=/Library/Fonts/PTMono.ttc:\
         fontcolor=white: alpha=0.7:\
+        fontsize=$FONT_SIZE:\
         box=1: boxcolor=black@0.4: boxborderw=8:\
         text='$dateString':\
-        x=16:\
-        y=(h-32),\
+        x=$PADDING:\
+        y=(h - $PADDING - max_glyph_h),\
       drawtext=\
         fontfile=/Library/Fonts/PTMono.ttc:\
         fontcolor=white: alpha=0.7:\
+        fontsize=$FONT_SIZE:\
         box=1: boxcolor=black@0.4: boxborderw=8:\
         text='${timeString[0,2]}\:${timeString[4,5]}':\
-        x=(174 + 16 + $(( $minutesFromNine / $delta )) * (16 + text_w)):\
-        y=(h-32)"\
+        x=($PADDING + $DATESTRING_W + $PADDING + $(( $minutesFromNine / $delta )) * ($PADDING + text_w)):\
+        y=(h - $PADDING - max_glyph_h)"\
       $OUTPUT/$videoFileName
     echo ' Done.'
+    hasVideos=1
   fi;
 done;
+if [ $hasVideos = 1 ]; then
+  echo "Complete. Photolog is saved to: $OUTPUT/"
+fi
