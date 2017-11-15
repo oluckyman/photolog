@@ -82,7 +82,7 @@ SRC_VIDEOS=$SCALED
 #
 # TIMESTAMPS STEP
 #
-echo "Adding timestamps to the videos."
+echo "Adding timestamps."
 mkdir -p $STAMPED
 processedCounter=0
 for file in $SRC_VIDEOS/*.mov; do;
@@ -127,29 +127,16 @@ SRC_VIDEOS=$STAMPED
 #
 # CONCAT STEP
 #
-echo "Concating all the videos into one."
+echo -n "Concating all the videos into one..."
 inputList=''
 filesCounter=0
 for file in $SRC_VIDEOS/*.mov; do;
-  inputList="$inputList -i $file"
+  inputList="$inputList -i '$file'"
   filesCounter=$(( $filesCounter + 1 ))
 done;
-concatCommand="ffmpeg $inputList -filter_complex 'concat=$filesCounter:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' $RESULT -y"
+concatCommand="ffmpeg $inputList -loglevel error -filter_complex \
+  'concat=$filesCounter:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' $RESULT -y"
 eval $concatCommand
-echo "\nComplete. Photolog is saved to:"
-echo "\t$(cd "$(dirname "$RESULT")"; pwd)/$(basename "$RESULT")\n\n"
-
-
-
-# if [ $hasVideos = 1 ]; then
-  # ffmpeg -f concat -safe 0 -i <(for f in $OUTPUT/*.mov; do echo "file '$PWD/$f'"; done) -c copy $OUTPUT/photolog.mov -loglevel error
-  # ffmpeg -i test/IMG_0163.mov -i test/IMG_0164.mov -filter_complex \
-# '[0:v:0] [0:a:0] [1:v:0] [1:a:0] concat=n=2:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' out.mov
-  #
-  #ffmpeg -i test/IMG_0167.mov -filter_complex 'concat=n=5:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' out.mov 
-  #
-  # concatCommand="ffmpeg $inputList -filter_complex 'concat=$filesCounter:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' photolog.mov -y"
-  # # echo $concatCommand
-  # eval $concatCommand
-  # echo "Complete. Photolog is saved to: $OUTPUT/"
-
+echo " done."
+echo "\nPhotolog is saved to:"
+echo "$(cd "$(dirname "$RESULT")"; pwd)/$(basename "$RESULT")\n\n"
